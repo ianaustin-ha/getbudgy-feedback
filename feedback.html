@@ -82,6 +82,7 @@
       transition: all 0.2s;
       font-size: 0.85rem;
       color: var(--muted);
+      user-select: none;
     }
 
     .type-btn input[type="radio"] { display: none; }
@@ -109,11 +110,26 @@
       transition: all 0.2s;
       margin-top: 0.5rem;
       box-shadow: 0 0 30px rgba(124,106,247,0.25);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
     }
     .btn-submit:hover { background: var(--accent2); transform: translateY(-1px); }
     .btn-submit:active { transform: translateY(0); }
+    .btn-submit[disabled] { opacity: 0.65; cursor: not-allowed; transform: none; }
 
     .form-note { font-size: 0.8rem; color: var(--muted); margin-top: 1rem; text-align: center; font-weight: 300; }
+
+    .status {
+      margin-top: 0.85rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+      text-align: center;
+      min-height: 1.2em;
+    }
+    .status.ok { color: #9be29b; }
+    .status.err { color: #ff7a7a; }
 
     footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 2rem; border-top: 1px solid var(--border); margin-top: 4rem; }
     footer a { color: var(--muted); text-decoration: none; }
@@ -124,20 +140,22 @@
     <a class="nav-logo" href="/">Budgy</a>
     <ul class="nav-links">
       <li><a href="/#features">Features</a></li>
-      <li><a href="feedback.html">Feedback</a></li>
-      <li><a href="privacy.html">Privacy</a></li>
-      <li><a href="terms.html">Terms</a></li>
+      <li><a href="/feedback">Feedback</a></li>
+      <li><a href="/privacy">Privacy</a></li>
+      <li><a href="/terms">Terms</a></li>
     </ul>
     <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu">
       <span></span><span></span><span></span>
     </button>
   </nav>
+
   <div class="nav-mobile" id="nav-mobile">
     <a href="/#features">Features</a>
-    <a href="feedback.html">Feedback</a>
-    <a href="privacy.html">Privacy</a>
-    <a href="terms.html">Terms</a>
+    <a href="/feedback">Feedback</a>
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
   </div>
+
   <script>
     const btn = document.getElementById('hamburger');
     const menu = document.getElementById('nav-mobile');
@@ -149,14 +167,15 @@
     <h1>Share your feedback</h1>
     <p class="page-sub">Found a bug, have an idea, or just want to say hi? We read everything and appreciate every message.</p>
 
-    <form name="feedback" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/thanks.html">
-      <!-- Netlify bot field -->
-      <input type="hidden" name="form-name" value="feedback" />
-      <p style="display:none;"><label>Don't fill this out: <input name="bot-field" /></label></p>
-
+    <!-- NOTE:
+      - We’re NOT using Netlify Forms here; we post directly to your Netlify Function:
+        /.netlify/functions/feedback
+      - This avoids 404s and routes through Resend.
+    -->
+    <form id="feedbackForm" novalidate>
       <div class="form-group">
         <label>Type of feedback</label>
-        <div class="type-grid">
+        <div class="type-grid" id="typeGrid">
           <label class="type-btn">
             <input type="radio" name="type" value="Bug Report" />
             <span class="type-icon">🐛</span>
@@ -190,13 +209,88 @@
         <textarea id="message" name="message" placeholder="Tell us what's on your mind..." required></textarea>
       </div>
 
-      <button type="submit" class="btn-submit">Send Feedback →</button>
+      <button type="submit" class="btn-submit" id="submitBtn">
+        <span id="submitText">Send Feedback →</span>
+      </button>
+
+      <div class="status" id="status"></div>
+
       <p class="form-note">Your feedback goes directly to the developer. We don't share your info with anyone.</p>
     </form>
   </div>
 
   <footer>
-    <p><a href="/">Budgy</a> &nbsp;·&nbsp; <a href="privacy.html">Privacy</a> &nbsp;·&nbsp; <a href="terms.html">Terms</a> &nbsp;·&nbsp; <a href="feedback.html">Feedback</a></p>
+    <p><a href="/">Budgy</a> &nbsp;·&nbsp; <a href="/privacy">Privacy</a> &nbsp;·&nbsp; <a href="/terms">Terms</a> &nbsp;·&nbsp; <a href="/feedback">Feedback</a></p>
   </footer>
+
+  <script>
+    // Make the whole "type" tile clickable/active on older browsers
+    const typeGrid = document.getElementById("typeGrid");
+    typeGrid.addEventListener("click", (e) => {
+      const label = e.target.closest(".type-btn");
+      if (!label) return;
+      const radio = label.querySelector('input[type="radio"]');
+      if (radio) radio.checked = true;
+    });
+
+    const form = document.getElementById("feedbackForm");
+    const statusEl = document.getElementById("status");
+    const submitBtn = document.getElementById("submitBtn");
+    const submitText = document.getElementById("submitText");
+
+    function setStatus(msg, kind) {
+      statusEl.textContent = msg || "";
+      statusEl.classList.remove("ok", "err");
+      if (kind) statusEl.classList.add(kind);
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      setStatus("");
+
+      const formData = new FormData(form);
+
+      const payload = {
+        name: (formData.get("name") || "").toString().trim(),
+        email: (formData.get("email") || "").toString().trim(),
+        type: (formData.get("type") || "General").toString(),
+        message: (formData.get("message") || "").toString().trim(),
+      };
+
+      if (!payload.message) {
+        setStatus("Please enter a message.", "err");
+        document.getElementById("message").focus();
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitText.textContent = "Sending…";
+
+      try {
+        const res = await fetch("/.netlify/functions/feedback", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        if (!res.ok) {
+          let detail = "";
+          try { detail = await res.text(); } catch {}
+          setStatus("Couldn’t send right now. Please try again." + (detail ? " (" + detail + ")" : ""), "err");
+          submitBtn.disabled = false;
+          submitText.textContent = "Send Feedback →";
+          return;
+        }
+
+        // Success → go to thanks page
+        window.location.href = "/thanks.html";
+
+      } catch (err) {
+        setStatus("Network error. Please try again.", "err");
+        submitBtn.disabled = false;
+        submitText.textContent = "Send Feedback →";
+      }
+    });
+  </script>
 </body>
 </html>
