@@ -15,12 +15,15 @@
       --bg: #0a0a0f;
       --bg2: #111118;
       --surface: #16161f;
+      --surface2: #14141c;
       --border: rgba(255,255,255,0.07);
+      --border2: rgba(255,255,255,0.10);
       --text: #f0eff5;
       --muted: #7a7990;
       --accent: #7c6af7;
       --accent2: #a594f9;
       --green: #4ade80;
+      --shadow: 0 0 40px rgba(124,106,247,0.18);
     }
 
     html { scroll-behavior: smooth; }
@@ -184,7 +187,7 @@
       line-height: 1.05;
       letter-spacing: -0.02em;
       margin-bottom: 1.5rem;
-      max-width: 800px;
+      max-width: 820px;
     }
 
     h1 em {
@@ -195,7 +198,7 @@
     .hero-sub {
       font-size: clamp(1rem, 2vw, 1.15rem);
       color: var(--muted);
-      max-width: 480px;
+      max-width: 520px;
       margin-bottom: 2.5rem;
       font-weight: 300;
     }
@@ -245,7 +248,7 @@
       justify-content: center;
     }
 
-    /* FEATURES */
+    /* SECTIONS */
     .section {
       padding: 6rem 2rem;
       max-width: 1100px;
@@ -271,47 +274,289 @@
 
     .section-sub {
       color: var(--muted);
-      max-width: 500px;
+      max-width: 580px;
       font-weight: 300;
       font-size: 1.05rem;
     }
 
-    .features-grid {
+    /* NEW: Features structure */
+    .features-top {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 2rem;
+      align-items: start;
       margin-top: 3.5rem;
     }
 
+    @media (max-width: 900px) {
+      .features-top { grid-template-columns: 1fr; }
+    }
+
+    .feature-hero {
+      position: relative;
+      background: linear-gradient(180deg, rgba(124,106,247,0.08), rgba(124,106,247,0.02));
+      border: 1px solid rgba(124,106,247,0.22);
+      border-radius: 20px;
+      padding: 2.1rem;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transform: translateZ(0);
+    }
+
+    .feature-hero::before {
+      content: '';
+      position: absolute;
+      inset: -30%;
+      background: radial-gradient(circle at 30% 20%, rgba(165,148,249,0.24) 0%, transparent 55%);
+      pointer-events: none;
+    }
+
+    .feature-hero .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: .55rem;
+      font-size: .78rem;
+      color: var(--accent2);
+      letter-spacing: .10em;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 0.9rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .feature-hero .kicker .dot {
+      width: 8px; height: 8px;
+      border-radius: 999px;
+      background: rgba(124,106,247,0.9);
+      box-shadow: 0 0 12px rgba(124,106,247,0.6);
+    }
+
+    .feature-hero h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.6rem, 2.6vw, 2.15rem);
+      letter-spacing: -0.02em;
+      line-height: 1.12;
+      margin-bottom: 0.8rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .feature-hero p {
+      color: rgba(240,239,245,0.78);
+      font-weight: 300;
+      max-width: 62ch;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 1.3rem;
+    }
+
+    .feature-hero .hero-bullets {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem 1.2rem;
+      margin-top: 0.6rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (max-width: 520px) {
+      .feature-hero .hero-bullets { grid-template-columns: 1fr; }
+    }
+
+    .pill {
+      display: inline-flex;
+      gap: .55rem;
+      align-items: center;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.03);
+      padding: .55rem .8rem;
+      color: rgba(240,239,245,0.80);
+      font-size: .9rem;
+      font-weight: 400;
+    }
+
+    .pill b { font-weight: 500; color: var(--text); }
+
+    .pill .icon {
+      width: 22px; height: 22px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: rgba(124,106,247,0.12);
+      border: 1px solid rgba(124,106,247,0.22);
+      color: var(--accent2);
+      font-size: 0.95rem;
+      flex: 0 0 auto;
+    }
+
+    .features-side {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .side-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 1.5rem;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .side-card:hover {
+      border-color: rgba(124,106,247,0.25);
+      transform: translateY(-3px);
+      box-shadow: 0 0 24px rgba(124,106,247,0.12);
+    }
+
+    .side-title {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      font-weight: 500;
+      margin-bottom: 0.35rem;
+      font-size: 1.02rem;
+    }
+
+    .side-title .badge {
+      width: 34px; height: 34px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: rgba(240,239,245,0.85);
+      font-size: 1.05rem;
+    }
+
+    .side-desc {
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 300;
+      line-height: 1.65;
+      max-width: 52ch;
+    }
+
+    /* Grid of remaining features */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 1.2rem;
+      margin-top: 1.8rem;
+    }
+
     .feature-card {
+      grid-column: span 4;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 1.75rem;
-      transition: border-color 0.2s, transform 0.2s;
+      border-radius: 18px;
+      padding: 1.6rem;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::after {
+      content: '';
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(circle at 20% 10%, rgba(124,106,247,0.14) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
     }
 
     .feature-card:hover {
       border-color: rgba(124,106,247,0.3);
       transform: translateY(-3px);
+      box-shadow: 0 0 22px rgba(124,106,247,0.10);
+    }
+    .feature-card:hover::after { opacity: 1; }
+
+    @media (max-width: 980px) {
+      .feature-card { grid-column: span 6; }
+    }
+    @media (max-width: 640px) {
+      .feature-card { grid-column: span 12; }
     }
 
     .feature-icon {
-      font-size: 1.75rem;
-      margin-bottom: 1rem;
+      width: 42px; height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: rgba(240,239,245,0.9);
+      font-size: 1.2rem;
+      margin-bottom: 0.9rem;
+      position: relative;
+      z-index: 1;
     }
 
     .feature-title {
       font-weight: 500;
       font-size: 1.05rem;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.45rem;
+      position: relative;
+      z-index: 1;
     }
 
     .feature-desc {
       color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.6;
+      font-size: 0.92rem;
+      line-height: 1.65;
       font-weight: 300;
+      position: relative;
+      z-index: 1;
+      max-width: 60ch;
+    }
+
+    /* NEW: Philosophy strip */
+    .philosophy {
+      margin-top: 1.6rem;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.09);
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+      padding: 1.35rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .philosophy strong {
+      font-weight: 500;
+      color: rgba(240,239,245,0.92);
+    }
+
+    .philosophy .lines {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      color: rgba(240,239,245,0.70);
+      font-size: 0.95rem;
+      font-weight: 300;
+    }
+
+    .mini-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .5rem .75rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.02);
+      color: rgba(240,239,245,0.72);
+    }
+
+    .mini-tag .mark {
+      width: 7px; height: 7px;
+      border-radius: 99px;
+      background: rgba(124,106,247,0.9);
+      box-shadow: 0 0 10px rgba(124,106,247,0.55);
     }
 
     /* DIVIDER */
@@ -396,7 +641,7 @@
   <section class="hero">
     <div class="hero-badge">Now available on the App Store</div>
     <h1>Your money,<br /><em>finally</em> under control</h1>
-    <p class="hero-sub">Budgy is a beautiful, private personal finance app. Track spending, set goals, and build better habits — all on your device.</p>
+    <p class="hero-sub">Budgy is a calm, private personal finance app. Track spending, set goals, and build better habits — all on your device.</p>
     <div class="hero-ctas">
       <a class="btn-primary" href="#" aria-label="Download on the App Store">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
@@ -408,41 +653,92 @@
 
   <hr class="divider" />
 
+  <!-- UPDATED: Stronger messaging + stronger visual structure -->
   <section class="section" id="features">
-    <div class="section-label">What's inside</div>
-    <h2 class="section-title">Everything you need,<br />nothing you don't</h2>
-    <p class="section-sub">Budgy keeps it simple so you can focus on what matters — your financial wellbeing.</p>
+    <div class="section-label">What’s inside</div>
+    <h2 class="section-title">Clarity you can feel.<br />Features that stay out of your way.</h2>
+    <p class="section-sub">Budgy is intentionally simple: just enough structure to stay consistent, and just enough insight to stay in control.</p>
 
-    <div class="features-grid">
+    <!-- NEW: Visual hierarchy block (big hero + side stack) -->
+    <div class="features-top">
+      <div class="feature-hero">
+        <div class="kicker"><span class="dot"></span> Privacy-first by design</div>
+        <h3>Your money isn’t content.<br />So Budgy doesn’t monetize it.</h3>
+        <p>No ads. No tracking. No “data partners.” Your financial data stays on your devices — and syncs privately through iCloud.</p>
+
+        <div class="hero-bullets">
+          <div class="pill"><span class="icon">🔒</span><b>On-device</b> by default</div>
+          <div class="pill"><span class="icon">☁️</span><b>iCloud</b> private sync</div>
+          <div class="pill"><span class="icon">🚫</span><b>No ads</b> or tracking</div>
+          <div class="pill"><span class="icon">🫶</span><b>Built</b> for calm</div>
+        </div>
+      </div>
+
+      <div class="features-side">
+        <div class="side-card">
+          <div class="side-title"><span class="badge">📊</span> Insights that make sense</div>
+          <p class="side-desc">Clear charts and breakdowns that answer one question: <em>“Where is my money going?”</em> No finance jargon.</p>
+        </div>
+
+        <div class="side-card">
+          <div class="side-title"><span class="badge">🎯</span> Goals that actually move</div>
+          <p class="side-desc">Track progress, stay motivated, and keep momentum — without turning budgeting into a second job.</p>
+        </div>
+
+        <div class="side-card">
+          <div class="side-title"><span class="badge">🔄</span> Recurring, handled</div>
+          <p class="side-desc">Subscriptions and bills shouldn’t surprise you. Set them once — Budgy keeps them visible.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEW: Philosophy strip (your differentiator, loud + clean) -->
+    <div class="philosophy" aria-label="Budgy philosophy">
+      <strong>Built differently.</strong>
+      <div class="lines">
+        <span class="mini-tag"><span class="mark"></span> No bank connections</span>
+        <span class="mini-tag"><span class="mark"></span> No data selling</span>
+        <span class="mini-tag"><span class="mark"></span> No noise</span>
+        <span class="mini-tag"><span class="mark"></span> Just clarity</span>
+      </div>
+    </div>
+
+    <!-- NEW: Feature grid (tight copy, consistent voice) -->
+    <div class="features-grid" aria-label="Budgy feature list">
       <div class="feature-card">
         <div class="feature-icon">💳</div>
         <div class="feature-title">Transaction Tracking</div>
-        <p class="feature-desc">Log income and expenses in seconds. Categorize, add notes, and instantly see where your money actually goes.</p>
+        <p class="feature-desc">Log income and expenses in seconds. Categorize, add notes, and see the story behind every spend.</p>
       </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📌</div>
+        <div class="feature-title">Categories that stay clean</div>
+        <p class="feature-desc">Keep your spending organized without overthinking it. Simple structure, consistent habits.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📅</div>
+        <div class="feature-title">Month-to-month clarity</div>
+        <p class="feature-desc">See what changed, what improved, and what needs attention — at a glance.</p>
+      </div>
+
       <div class="feature-card">
         <div class="feature-icon">🎯</div>
         <div class="feature-title">Savings Goals</div>
-        <p class="feature-desc">Set goals, track progress, and celebrate wins. Whether it's a vacation or an emergency fund, Budgy keeps you on track.</p>
+        <p class="feature-desc">Set targets, track progress, and stay motivated. Budgy turns “someday” into something real.</p>
       </div>
+
       <div class="feature-card">
         <div class="feature-icon">🔄</div>
         <div class="feature-title">Recurring Transactions</div>
-        <p class="feature-desc">Set up subscriptions and bills once. Budgy tracks them automatically so nothing slips through the cracks.</p>
+        <p class="feature-desc">Add bills and subscriptions once. Budgy keeps them predictable, so nothing slips through.</p>
       </div>
+
       <div class="feature-card">
         <div class="feature-icon">📊</div>
         <div class="feature-title">Insights & Analytics</div>
-        <p class="feature-desc">Beautiful charts and breakdowns that make your spending patterns clear at a glance.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">☁️</div>
-        <div class="feature-title">iCloud Sync</div>
-        <p class="feature-desc">Your data syncs privately across all your Apple devices via iCloud. No accounts, no servers — just yours.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🔒</div>
-        <div class="feature-title">Privacy First</div>
-        <p class="feature-desc">Your financial data never leaves your devices. No ads, no tracking, no selling your information. Ever.</p>
+        <p class="feature-desc">Beautiful charts that are actually useful — designed to guide decisions, not overwhelm you.</p>
       </div>
     </div>
   </section>
