@@ -12,3 +12,9 @@
   from = "/feedback"
   to = "/feedback.html"
   status = 200
+
+[build]
+  publish = "."
+
+[functions]
+  directory = "netlify/functions"
